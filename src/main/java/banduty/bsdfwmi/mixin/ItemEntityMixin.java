@@ -11,6 +11,7 @@ import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ItemEntity.class)
@@ -81,6 +82,19 @@ public abstract class ItemEntityMixin extends Entity {
         itemStack.increment(i);
         stack2.decrement(i);
         return itemStack;
+    }
+
+    @Unique
+    double distanceItemEntities = BsDFWMI.CONFIG.common.getDistanceItemEntities();
+
+    @ModifyArg(method = "tryMerge()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/Box;expand(DDD)Lnet/minecraft/util/math/Box;"), index = 0)
+    private double bsDFWMI$tryMergeX(double x) {
+        return distanceItemEntities;
+    }
+
+    @ModifyArg(method = "tryMerge()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/Box;expand(DDD)Lnet/minecraft/util/math/Box;"), index = 2)
+    private double bsDFWMI$tryMergeZ(double z) {
+        return distanceItemEntities;
     }
 
     @Unique
